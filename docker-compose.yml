@@ -9,5 +9,5 @@ services:
      ports: 
       - "5000:5000"
      environment:
-       MONGO_URI: mongo://192.168.1.11:27017/jobportal     
+       MONGO_URI: mongodb://192.168.1.11:27017/jobportal     
       
