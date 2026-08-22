@@ -1,0 +1,13 @@
+services:
+  frontend:
+    image: frontend:v1
+    ports:
+      - "8081:80"
+
+  backend:
+     image: backend:v1
+     ports: 
+      - "5000:5000"
+     environment:
+       MONGO_URI: mongo://192.168.1.11:27017/jobportal     
+      
