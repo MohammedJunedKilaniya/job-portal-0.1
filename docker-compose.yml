@@ -5,7 +5,7 @@ services:
       - "8081:80"
 
   backend:
-     image: backend:v1
+     image: backend-job:v1
      ports: 
       - "5000:5000"
      environment:
