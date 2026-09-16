@@ -1,11 +1,11 @@
 services:
   frontend:
-    image: frontend:v1
+    image: jobportal-frontend
     ports:
       - "8081:80"
 
   backend:
-     image: backend-job:v1
+     image: jobportal-backend
      ports: 
       - "5000:5000"
      environment:
