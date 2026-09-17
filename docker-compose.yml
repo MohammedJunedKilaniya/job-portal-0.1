@@ -3,6 +3,8 @@ services:
     image: jobportal-frontend
     ports:
       - "8081:80"
+    depends_on:
+      - backend
 
   backend:
      image: jobportal-backend
