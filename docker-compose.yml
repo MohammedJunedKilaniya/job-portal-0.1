@@ -9,5 +9,13 @@ services:
      ports: 
       - "5000:5000"
      environment:
-       MONGO_URI: mongodb://192.168.1.11:27017/jobportal     
+       MONGO_URI: mongodb://database:27017/jobportal
+     depends_on:
+      - database
       
+  database:
+      image: mongo:latest
+      ports:
+       - "27017:27017"
+      
+ 
