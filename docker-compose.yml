@@ -20,4 +20,26 @@ services:
       ports:
        - "27017:27017"
       
- 
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    ports:
+     - "8080:8080"
+    volumes:
+     - /:/rootfs:ro
+     - /sys:/sys:ro
+     - /var/run:/var/run:ro
+     - /var/lib/docker:/var/lib/docker:ro
+
+  prometheus: 
+    image: prom/prometheus:latest
+    container_name: prometheus 
+    ports:
+     - "9090:9090"
+    volumes:
+     - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    restart: unless-stopped
+        
+
+
+
+
