@@ -30,6 +30,22 @@ services:
      - /var/run:/var/run:ro
      - /var/lib/docker:/var/lib/docker:ro
 
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: VM-metrices
+    ports:
+      - "9100:9100"
+    volumes:
+      - /:/rootfs:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/rootfs"
+    restart: unless-stopped   
+
+
   prometheus: 
     image: prom/prometheus:latest
     container_name: prometheus 
