@@ -54,8 +54,17 @@ services:
     volumes:
      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     restart: unless-stopped
-        
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+     - "3000:3000"
+    volumes:
+     - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+  volumes:
+    grafana_data:
 
 
 
