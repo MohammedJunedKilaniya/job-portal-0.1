@@ -19,6 +19,19 @@ const PORT = process.env.PORT || 5000;
 
 client.collectDefaultMetrics();
 
+const httpRequestCounter = new client.Counter({
+  name: 'http_requests_total',
+  help: 'Total number of HTTP requests',
+  labelNames: ['method', 'route', 'status_code']
+});
+
+const httpRequestDuration = new client.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'HTTP request duration in seconds',
+  labelNames: ['method', 'route', 'status_code'],
+  buckets: [0.1, 0.3, 0.5, 1, 2, 5]
+});
+
 // Trust proxy for rate limiting (needed when behind React dev server proxy)
 app.set('trust proxy', 1);
 
@@ -34,6 +47,34 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+app.use((req, res, next) => {
+  const start = process.hrtime();
+
+  res.on('finish', () => {
+    const diff = process.hrtime(start);
+    const duration = diff[0] + diff[1] / 1e9;
+
+    const route = req.originalUrl.split('?')[0];
+
+    httpRequestCounter.inc({
+      method: req.method,
+      route: route,
+      status_code: res.statusCode
+    });
+
+    httpRequestDuration.observe(
+      {
+        method: req.method,
+        route: route,
+        status_code: res.statusCode
+      },
+      duration
+    );
+  });
+
+  next();
+});
 
 // Session configuration for Passport
 app.use(session({
