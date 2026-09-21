@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const session = require('express-session');
+const client = require('prom-client');
 const connectDB = require('./src/config/db');
 require('dotenv').config();
 
@@ -15,6 +16,8 @@ const employerRoutes = require('./src/routes/employer');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+client.collectDefaultMetrics();
 
 // Trust proxy for rate limiting (needed when behind React dev server proxy)
 app.set('trust proxy', 1);
@@ -76,6 +79,12 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Health check
 app.get('/', (req, res) => {
   res.json({ message: 'Job Listing Portal Backend is running!' });
+});
+
+// Prometheus metrics
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
 });
 
 app.listen(PORT, () => {
